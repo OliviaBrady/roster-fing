@@ -4,7 +4,18 @@ from dateutil import tz
 
 c = Calendar()
 
-date_format = '%Y-%m-%d %H:%M:%S'
+
+
+def to_utc(date_string):
+
+    """ ics format wants utc strings, this will convert to UTC timezone """
+
+    date_format = '%Y-%m-%d %H:%M:%S'
+
+    time_dt = datetime.strptime(date_string, date_format).replace(tzinfo=tz.gettz('Australia/Sydney'))
+    time_dt = time_dt.astimezone(tz.tzutc())
+
+
 
 with open('Example Roster.html', 'r') as my_file:
     lines = my_file.readlines()
@@ -15,12 +26,8 @@ with open('Example Roster.html', 'r') as my_file:
 
             e = Event()
             e.name = "Shift"
-
-            time = f'{year}-{mth}-{day} 07:00:00'
-            time_dt = datetime.strptime(time, date_format).replace(tzinfo=tz.gettz('Australia/Sydney'))
-            time_dt = time_dt.astimezone(tz.tzutc())
-
-            e.begin = time_dt.strftime(date_format)
+            time = f"{year}-{mth}-{day} 07:00:00"
+            e.begin = to_utc(time)
             e.duration = {'hours':12}
             c.events.add(e)
 
