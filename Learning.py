@@ -40,14 +40,16 @@ with open('Example Roster.html', 'r') as my_file:
 
     for date, start_time in zip(dates, start_times):
 
+        day, mth, year = date
+
         e = Event()
-        e.name = "Shift"
+        e.name = "Night Shift" if start_time == "19:00:00" else "Day Shift"
         time = f"{year}-{mth}-{day} {start_time}"
         e.begin = to_utc(time)
         e.duration = {"hours" : 12, "minutes" : 30}
         c.events.add(e)
 
-with open('night-shift.ics', 'w') as my_file:
+with open('Rosters/roster_julyaug.ics', 'w') as my_file:
     my_file.writelines(c)
 
 print('completed successfully')
